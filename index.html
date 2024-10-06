@@ -206,9 +206,7 @@
 
         /* Print-specific styles */
         @media print {
-            @page {
-                margin: 0;
-            }
+           
 
             body {
                 margin: 0;
@@ -298,7 +296,7 @@ button {
  @media print {
     @page {
         size: A4 portrait; /* Set page size to A4 in portrait orientation */
-        margin: 0.5mm; /* Adjust the margin as needed */
+        margin: 0.0mm; /* Adjust the margin as needed */
     }
 
     /* Ensure only the first page content is printed */
@@ -306,6 +304,7 @@ button {
         overflow: hidden;
         height: 100%; /* Limit the printable content to one page */
     }
+}
     </style>
 </head>
 
