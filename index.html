@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquaguard Insulations Invoice</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        .container {
+    width: 793px;
+    height: 1122px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    border: 5px solid #3f7f76;
+    position: relative; /* This makes the container the reference for absolute positioning */
+    box-sizing: border-box;
+}
+
+        .header-image {
+            width: 100%;
+            height: auto;
+            border-bottom: 5px solid #3f7f76;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: right;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .invoice-details {
+            margin-bottom: 20px;
+            border: 1px solid #3f7f76;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .invoice-details div {
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #3f7f76;
+        }
+
+        .invoice-details div:last-child {
+            margin-bottom: 0;
+        }
+
+        .invoice-details label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .invoice-details input {
+            width: calc(100% - 110px);
+            padding: 5px;
+            border: none;
+            border-left: 1px solid #3f7f76;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #cce0df;
+        }
+
+        .tcontainer {
+            height: 500px;
+            position: relative;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .tcontainer table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tcontainer th,
+        .tcontainer td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .tcontainer th {
+            background-color: #cce0df;
+        }
+
+        .tcontainer td:nth-child(1),
+        .tcontainer td:nth-child(2),
+        .tcontainer td:nth-child(3) {
+            border-right: 2px solid #333;
+        }
+
+        .tcontainer input {
+            width: 100%;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .total-section {
+            width: 300px;
+            float: right;
+             margin-top: -10px; 
+            padding: 10px;
+            border: 2px solid #ddd;
+            box-sizing: border-box;
+            text-align: left;
+           
+        }
+
+        .total-section .total-row {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .total-section .label {
+            /* background-color: #cce0df; */
+            padding-right: 20px;
+            text-decoration: bold;
+            
+        }
+
+        .total-section .value {
+            padding-left: 20px;
+        }
+
+        .signature {
+
+            position: absolute;
+    bottom: 110px; 
+    right: 20px; 
+    text-align: right;
+    font-size: 16px;
+            
+        }
+
+        
+        .print-button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+
+        .add-remove-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .add-remove-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-remove-buttons button.remove {
+            background-color: #dc3545;
+        }
+
+        .add-remove-buttons button:hover {
+            background-color: #13832c;
+        }
+
+        .add-remove-buttons button.remove:hover {
+            background-color: #a31825;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            @page {
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
+            }
+
+            .container {
+                margin: 0;
+                width: 793px;
+                height: 1122px;
+                border: none;
+                page-break-inside: avoid;
+            }
+
+            .header-image {
+                border-bottom: 5px solid #3f7f76;
+            }
+
+            .print-button-container,
+            .add-remove-buttons {
+                display: none;
+            }
+
+          
+            
+            .invoice-header,
+            .invoice-details,
+            table,
+            th,
+            td {
+                -webkit-print-color-adjust: exact;
+            }
+        }
+        .tcontainer
+        {
+            border: #3f7f76 2px solid;
+            height: fit-content;
+        }
+        .footer{
+             display: flex;
+    justify-content: center; /* Center the image */
+    align-items: center;
+    padding: 5px;
+  
+    color: #fff;
+    position: absolute;
+    bottom: 2px;    
+    left: 0;
+    width: 100%; /* Full width */
+    height: 80px; /* Keep the height intact */
+    box-sizing: border-box;
+    border-top: 5px solid #3f7f76;
+        }
+        .footer-image{
+            width: 100%;
+            height: auto;
+        }
+
+.button-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 20px; 
+}
+
+ 
+.print-button-container {
+    margin-bottom: 10px; 
+}
+
+button {
+    padding: 10px 20px; /* Adjust button padding for better touch targets on mobile */
+    font-size: 16px; /* Increase font size for better readability */
+    margin: 5px; /* Space between buttons */
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+    button {
+        width: 100%; /* Make buttons full width on mobile */
+        max-width: 300px; /* Optional: limit max width */
+    }
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="./asserts/header.jpg" alt="" class="header-image">
+        <form action="" id="form-id">
+
+            <div class="invoice-header">
+                <div class="date">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date">
+            </div>
+        </div>
+        
+        <div class="invoice-details">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px;" >
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; ">
+            </div>
+            <div>
+                <label for="contact">Contact:</label>
+                <input type="text" id="contact" name="contact" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; " >
+            </div>
+        </div>
+
+        <div class="tcontainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SR. NO.</th>
+                        <th>DESCRIPTION</th>
+                        <th>QUANTITY</th>
+                        <th>PRICE</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr id="row1">
+                        <td>1</td>
+                        <td colspan="1">
+                            <textarea name="description1" rows="2" style="width: 30ch; word-wrap: break-word; resize: both;"
+                                placeholder="Enter description..."></textarea>
+                        </td>
+
+                    <td>
+                        <input type="number" name="quantity1" placeholder="Enter Quantity"
+                            style="width: 150px; height: 30px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                    </td>
+                    <td>
+                        <input type="number" name="price1" placeholder="Enter Price"
+                            style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                    </td>
+
+                    </tr>
+                    
+                </tbody>
+                
+            </table>
+            
+      
+        </div>
+                
+            <div class="total-section">
+                <div class="total-row">
+                    <span class="label">TOTAL  AMOUNT</span>
+                    
+                    <span class="value"><input type="text" id="total-amount" style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" readonly></span>
+                </div>
+                <div class="total-row">
+                    <span class="label">ADVANCE</span>
+                    <span class="value"><input type="number"  id="advance" onchange="calculateBalance()"  style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"></span>
+                </div>
+                <div class="total-row">
+                    <span class="label">BALANCE</span>
+                    <span class="value"><input type="text" id="balance" style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"readonly></span>
+                </div>
+            </div>
+        <div class="signature">
+            Signature: ____________
+        </div>
+
+    <div class="footer">
+    <img src="./asserts/footer.png" alt="Footer Image" class="footer-image">
+</div>
+
+</form>
+</div>
+
+<div class="button-container">
+        <div class="add-remove-buttons">
+            <button onclick="addRow()">Add Row</button>
+            <button class="remove" onclick="removeRow()">Remove Row</button>
+            <button class="print-button" onclick="downloadAndPrintInvoice()" style="background-color: #0c3a9e; ">Download and Print Invoice</button>
+        </div>
+    
+        
+       
+    </div>
+<br><br>
+
+<script>
+        // Store for rows' quantity and price
+        const rowsData = {
+            row1: { quantity: 0, price: 0 },
+            row2: { quantity: 0, price: 0 },
+            row3: { quantity: 0, price: 0 },
+            row4: { quantity: 0, price: 0 },
+            row5: { quantity: 0, price: 0 }
+        };
+
+        const totalAmountInput = document.getElementById('total-amount');
+        const advanceInput = document.getElementById('advance');
+        const balanceInput = document.getElementById('balance');
+
+
+      
+            
+        
+        // Calculate total amount by fetching from storage
+        function calculateTotalAmount() {
+            let totalAmount = 0;
+            for (const row in rowsData) {
+                const { quantity, price } = rowsData[row];
+                totalAmount += quantity * price;
+            }
+            totalAmountInput.value = totalAmount;
+            calculateBalance();
+        }
+
+        // Calculate balance
+        function calculateBalance() {
+            const advance = parseFloat(advanceInput.value) || 0;
+            const totalAmount = parseFloat(totalAmountInput.value) || 0;
+            balanceInput.value = totalAmount - advance;
+            console.log(balanceInput.value);
+        }
+
+        // Update storage for quantity and price of a specific row
+        function updateRowData(rowNumber, fieldType, value) {
+            
+        
+            const rowKey = `row${rowNumber}`;
+            rowsData[rowKey][fieldType] = parseFloat(value) || 0;
+            calculateTotalAmount();
+        }
+
+        // Add event listeners dynamically for quantity and price input changes
+        function attachEventListeners(rowNumber) {
+            const quantityInput = document.querySelector(`input[name="quantity${rowNumber}"]`);
+            const priceInput = document.querySelector(`input[name="price${rowNumber}"]`);
+            
+
+        quantityInput.addEventListener('input', () => {
+                // Convert to positive if the value is negative
+                if (quantityInput.value < 0) {
+                    quantityInput.value = Math.abs(quantityInput.value);
+                }
+                updateRowData(rowNumber, 'quantity', quantityInput.value);
+            });
+
+            priceInput.addEventListener('input', () => {
+                // Convert to positive if the value is negative
+                if (priceInput.value < 0) {
+                    priceInput.value = Math.abs(priceInput.value);
+                }
+                updateRowData(rowNumber, 'price', priceInput.value);
+            });
+
+        }
+
+        // Initial rows and event listeners
+        let rowNumber = 2;
+
+        function addRow() {
+            let tableBody = document.getElementById('table-body');
+            let newRow = document.createElement('tr');
+            newRow.id = `row${rowNumber}`;
+            newRow.innerHTML = `
+                <td>${rowNumber}</td>
+                <td colspan="1">
+                    <textarea name="description${rowNumber}" rows="2" style="width: 30ch; word-wrap: break-word; resize: both;"
+                        placeholder="Enter description..."></textarea>
+                </td>
+                <td>
+                    <input type="number" name="quantity${rowNumber}" placeholder="Enter Quantity" 
+                        style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                </td>
+                <td>
+                    <input type="number" name="price${rowNumber}" placeholder="Enter Price" 
+                        style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+
+            attachEventListeners(rowNumber);
+            rowNumber++;
+        }
+
+        function removeRow() {
+            let tableBody = document.getElementById('table-body');
+            if (rowNumber > 2) {
+                let rowToDelete = document.getElementById(`row${rowNumber - 1}`);
+                rowToDelete.parentNode.removeChild(rowToDelete);
+                rowNumber--;
+                // Remove row from rowsData storage
+                delete rowsData[`row${rowNumber}`];
+                calculateTotalAmount(); // Recalculate after row removal
+            }
+        }
+
+        function deleteRow(rowNumber) {
+            let rowToDelete = document.getElementById(`row${rowNumber}`);
+            rowToDelete.parentNode.removeChild(rowToDelete);
+            delete rowsData[`row${rowNumber}`];
+            calculateTotalAmount(); // Recalculate after row deletion
+        }
+
+        // Attach event listeners to initial rows
+        for (let i = 1; i <= 5; i++) {
+            attachEventListeners(i);
+        }
+
+      function downloadAndPrintInvoice() {
+           
+           window.print();
+        }
+            
+
+        calculateTotalAmount();
+        calculateBalance();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.invoice {
+    width: 210mm;
+    height: 297mm;
+    /* A4 size */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+}
+
+.invoice-details {
+    margin-top: 10px;
+}
+
+.details-table {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.details-table td {
+    padding: 5px;
+}
+
+.item-table-container {
+    position: relative;
+    background: url('invoice.jpg') no-repeat center center;
+    /* Watermark */
+    background-size: contain;
+    opacity: 0.1;
+    /* Adjust as needed */
+    z-index: 1;
+}
+
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
+    z-index: 2;
+    position: relative;
+}
+
+.item-table th,
+.item-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.amount-section {
+    margin-top: 10px;
+}
+
+.amount-table {
+    width: 100%;
+}
+
+.amount-table td {
+    padding: 5px;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.contact-info {
+    margin-top: 10px;
+}
+
+@media print {
+    .invoice {
+        box-shadow: none;
+        margin: 0;
+    }
+}
