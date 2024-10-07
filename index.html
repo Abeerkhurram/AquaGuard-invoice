@@ -379,7 +379,7 @@ button {
                 </div>
                 <div class="total-row">
                     <span class="label">ADVANCE</span>
-                    <span class="value"><input type="number"  id="advance" onchange="calculateBalance()"  style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"></span>
+                    <span class="value"><input type="text"  id="advance" onchange="calculateBalance()"  style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"></span>
                 </div>
                 <div class="total-row">
                     <span class="label">BALANCE</span>
@@ -444,16 +444,33 @@ button {
         }
 
         // Calculate balance
-        function calculateBalance() {
-            const advance = parseFloat(advanceInput.value) || 0;
-            // Remove commas and convert back to a number
-            const totalAmount = parseFloat(totalAmountInput.value.replace(/,/g, ''));
+      function calculateBalance() {
+            // Get the advance value, remove 'Rs', commas, and whitespace, then convert to a number
+            const advance = parseFloat(advanceInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
 
-            let temp=totalAmount - advance;
-            balanceInput.value = temp.toLocaleString('en-US') + ' Rs';
+            // Remove 'Rs', commas from totalAmount and convert to a number
+            const totalAmount = parseFloat(totalAmountInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
+
+            // Calculate the balance
+            const temp = totalAmount - advance;
+
+            // Set the formatted advance value back to advanceInput
             
+            // Check if temp is equal to the total amount (indicating advance is zero)
+            if (temp == totalAmount) {
+                advanceInput.placeholder = "0 Rs"; // Show placeholder if advance is zero
+            } else {
+                // Clear the placeholder if advance is not zero
+                advanceInput.value = advance.toLocaleString('en-US') + ' Rs';
+            }
+
+            // Set the balance value in en-US format with ' Rs' suffix
+            balanceInput.value = temp.toLocaleString('en-US') + ' Rs';
+
             console.log(balanceInput.value);
         }
+
+
 
         // Update storage for quantity and price of a specific row
         function updateRowData(rowNumber, fieldType, value) {
