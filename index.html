@@ -295,7 +295,7 @@ button {
 
  @media print {
     @page {
-        size: A4 portrait; /* Set page size to A4 in portrait orientation */
+        size:A4 portrait; /* Set page size to A4 in portrait orientation */
         margin: 0.0mm; /* Adjust the margin as needed */
     }
 
@@ -358,7 +358,7 @@ button {
                             style="width: 150px; height: 30px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
                     <td>
-                        <input type="number" name="price1" placeholder="Enter Price"
+                        <input type="number" id="idd" name="price1" placeholder="Enter Price"
                             style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
 
@@ -429,29 +429,40 @@ button {
         
         // Calculate total amount by fetching from storage
         function calculateTotalAmount() {
+
             let totalAmount = 0;
             for (const row in rowsData) {
                 const { quantity, price } = rowsData[row];
                 totalAmount += quantity * price;
+                    
             }
-            totalAmountInput.value = totalAmount;
+            
+            totalAmount=totalAmount.toLocaleString('en-US');
+            totalAmountInput.value = totalAmount +' Rs';
+            
             calculateBalance();
         }
 
         // Calculate balance
         function calculateBalance() {
             const advance = parseFloat(advanceInput.value) || 0;
-            const totalAmount = parseFloat(totalAmountInput.value) || 0;
-            balanceInput.value = totalAmount - advance;
+            // Remove commas and convert back to a number
+            const totalAmount = parseFloat(totalAmountInput.value.replace(/,/g, ''));
+
+            let temp=totalAmount - advance;
+            balanceInput.value = temp.toLocaleString('en-US') + ' Rs';
+            
             console.log(balanceInput.value);
         }
 
         // Update storage for quantity and price of a specific row
         function updateRowData(rowNumber, fieldType, value) {
             
-        
+
+            
             const rowKey = `row${rowNumber}`;
             rowsData[rowKey][fieldType] = parseFloat(value) || 0;
+            
             calculateTotalAmount();
         }
 
@@ -469,13 +480,16 @@ button {
                 updateRowData(rowNumber, 'quantity', quantityInput.value);
             });
 
-            priceInput.addEventListener('input', () => {
+          priceInput.addEventListener('input', () => {
                 // Convert to positive if the value is negative
+                let temp;
                 if (priceInput.value < 0) {
                     priceInput.value = Math.abs(priceInput.value);
                 }
+
                 updateRowData(rowNumber, 'price', priceInput.value);
             });
+
 
         }
 
