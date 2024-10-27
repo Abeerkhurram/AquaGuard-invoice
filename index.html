@@ -30,11 +30,14 @@
     box-sizing: border-box;
 }
 
-        .header-image {
-            width: 100%;
-            height: auto;
-            border-bottom: 5px solid #3f7f76;
-            margin-bottom: 20px;
+     .header-image {
+           
+    width: 100%;
+    height: 6.5% ;
+    border-bottom: 3px solid #3f7f76;
+    margin-bottom: 13px;
+    object-fit:inherit; /* Ensures the image covers the width and height */
+
         }
 
         h1 {
@@ -51,14 +54,14 @@
         }
 
         .invoice-details {
-            margin-bottom: 20px;
+            margin-bottom: 4px;
             border: 1px solid #3f7f76;
             padding: 10px;
             box-sizing: border-box;
         }
 
         .invoice-details div {
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             padding: 5px;
             border: 1px solid #3f7f76;
         }
@@ -134,8 +137,8 @@
         .total-section {
             width: 300px;
             float: right;
-             margin-top: -10px; 
-            padding: 10px;
+             margin-top: -17px; 
+            padding: 0px;
             border: 2px solid #ddd;
             box-sizing: border-box;
             text-align: left;
@@ -143,16 +146,18 @@
         }
 
         .total-section .total-row {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            padding: 4px 0;
         }
 
         .total-section .label {
             /* background-color: #cce0df; */
             padding-right: 20px;
             text-decoration: bold;
+            margin-left: 20px;
+            margin-top: 3px;
             
         }
 
@@ -163,7 +168,7 @@
         .signature {
 
             position: absolute;
-    bottom: 110px; 
+    bottom: 70px; 
     right: 20px; 
     text-align: right;
     font-size: 16px;
@@ -244,7 +249,7 @@
         .tcontainer
         {
             border: #3f7f76 2px solid;
-            height: fit-content;
+            height:auto;
         }
         .footer{
              display: flex;
@@ -257,13 +262,14 @@
     bottom: 2px;    
     left: 0;
     width: 100%; /* Full width */
-    height: 80px; /* Keep the height intact */
+    height: 62px; /* Keep the height intact */
     box-sizing: border-box;
     border-top: 5px solid #3f7f76;
         }
         .footer-image{
             width: 100%;
-            height: auto;
+            height: 50px;
+
         }
 
 .button-container {
@@ -304,7 +310,18 @@ button {
         overflow: hidden;
         height: 100%; /* Limit the printable content to one page */
     }
+    
 }
+#invoice-header {
+    font-size: 50px;
+    margin-right: 270px;
+    position: absolute;
+    font-weight:lighter; /* Removes bold styling */
+     letter-spacing: 10px; /* Adjusts spacing between letters */
+     opacity: 0.8; /* Makes the text semi-transparent */
+     color: #dc3545;
+}
+
     </style>
 </head>
 
@@ -314,6 +331,9 @@ button {
         <form action="" id="form-id">
 
             <div class="invoice-header">
+                        <h3 id="invoice-header">
+                            Invoice
+                        </h3>
                 <div class="date">
                     <label for="date">Date:</label>
                     <input type="date" id="date" name="date">
@@ -322,16 +342,21 @@ button {
         
         <div class="invoice-details">
             <div>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px;" >
+                <label for="name">Cutomer Name:</label>
+                <input type="text" id="name" name="name" autocomplete="off" style="width: 580px; height: 1px; ;margin-left: 3px;padding: 10px; font-size: 16px; border-radius: 5px;" >
             </div>
             <div>
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; ">
+                <label for="address">Cutomer Address:</label>
+                <input type="text" id="address" name="address" autocomplete="off" style="width: 580px; height: 1px; ;margin-left: 3px;padding: 10px; font-size: 16px; border-radius: 5px; ">
             </div>
             <div>
-                <label for="contact">Contact:</label>
-                <input type="text" id="contact" name="contact" autocomplete="off" style="width: 580px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; " >
+                <label for="contact">Ref No:</label>
+                <textarea id="contact" name="contact" rows="1"
+                    style="width: 580px; margin-left: 5px; padding: 4px; font-size: 14px; border:none ;  border-radius: 5px; resize: none; overflow: hidden;"
+                    oninput="expandTextarea(this)"></textarea>
+
+
+
             </div>
         </div>
 
@@ -342,24 +367,24 @@ button {
                         <th>SR. NO.</th>
                         <th>DESCRIPTION</th>
                         <th>QUANTITY</th>
-                        <th>PRICE</th>
+                        <th>PRICE (PKR)</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     <tr id="row1">
                         <td>1</td>
                         <td colspan="1">
-                            <textarea name="description1" rows="2" style="width: 30ch; word-wrap: break-word; resize: both;"
+                            <textarea name="description1" rows="2" style="width: 50ch; word-wrap: break-word; resize:vertical;"
                                 placeholder="Enter description..."></textarea>
                         </td>
 
                     <td>
-                        <input type="number" name="quantity1" placeholder="Enter Quantity"
-                            style="width: 150px; height: 30px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                        <input type="number" name="quantity1" placeholder="Enter Qty"
+                            style="width: 100px; height: 20px; ;margin-left: 5px;padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
                     <td>
-                        <input type="number" id="idd" name="price1" placeholder="Enter Price"
-                            style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                        <input type="text" id="idd" name="price1" placeholder="Enter Price"
+                            style="width: 100px; text-align: right;height: 20px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
 
                     </tr>
@@ -375,15 +400,15 @@ button {
                 <div class="total-row">
                     <span class="label">TOTAL  AMOUNT</span>
                     
-                    <span class="value"><input type="text" id="total-amount" style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" readonly></span>
+                    <span class="value"><input type="text" id="total-amount" style="width: 110px; height: 10px;text-align: right ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" readonly></span>
                 </div>
                 <div class="total-row">
                     <span class="label">ADVANCE</span>
-                    <span class="value"><input type="text"  id="advance" onchange="calculateBalance()"  style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"></span>
+                    <span class="value"><input type="text"  id="advance" onchange="calculateBalance()"  style="width: 110px; text-align: right;height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"></span>
                 </div>
                 <div class="total-row">
                     <span class="label">BALANCE</span>
-                    <span class="value"><input type="text" id="balance" style="width: 110px; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"readonly></span>
+                    <span class="value"><input type="text" id="balance" style="width: 110px;text-align: right; height: 10px; ;margin-left: 5px;padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;"readonly></span>
                 </div>
             </div>
         <div class="signature">
@@ -438,7 +463,7 @@ button {
             }
             
             totalAmount=totalAmount.toLocaleString('en-US');
-            totalAmountInput.value = totalAmount +' Rs';
+            totalAmountInput.value = totalAmount ;
             
             calculateBalance();
         }
@@ -458,17 +483,30 @@ button {
             
             // Check if temp is equal to the total amount (indicating advance is zero)
             if (temp == totalAmount) {
-                advanceInput.placeholder = "0 Rs"; // Show placeholder if advance is zero
+                advanceInput.placeholder = "0"; // Show placeholder if advance is zero
             } else {
                 // Clear the placeholder if advance is not zero
-                advanceInput.value = advance.toLocaleString('en-US') + ' Rs';
+                advanceInput.value = advance.toLocaleString('en-US') ;
             }
 
             // Set the balance value in en-US format with ' Rs' suffix
-            balanceInput.value = temp.toLocaleString('en-US') + ' Rs';
+            balanceInput.value = temp.toLocaleString('en-US') ;
 
             console.log(balanceInput.value);
         }
+
+ function expandTextarea(element) {
+        element.style.height = "auto"; // Reset height to auto to recalculate
+        element.style.height = element.scrollHeight + "px"; // Expand to fit content
+
+        // Add line breaks every 50 characters
+        let text = element.value.replace(/\n/g, ""); // Remove existing line breaks
+        let formattedText = text.match(/.{1,50}/g)?.join("\n") || text; // Insert line break every 50 chars
+        if (formattedText !== text) {
+            element.value = formattedText;
+        }
+    }
+
 
 
 
@@ -503,7 +541,7 @@ button {
                 if (priceInput.value < 0) {
                     priceInput.value = Math.abs(priceInput.value);
                 }
-
+                    
                 updateRowData(rowNumber, 'price', priceInput.value);
             });
 
@@ -514,22 +552,26 @@ button {
         let rowNumber = 2;
 
         function addRow() {
+            if(rowNumber==8)
+        {
+            return;
+        }
             let tableBody = document.getElementById('table-body');
             let newRow = document.createElement('tr');
             newRow.id = `row${rowNumber}`;
             newRow.innerHTML = `
                 <td>${rowNumber}</td>
                 <td colspan="1">
-                    <textarea name="description${rowNumber}" rows="2" style="width: 30ch; word-wrap: break-word; resize: both;"
+                    <textarea name="description${rowNumber}" rows="2" style="width: 50ch; word-wrap: break-word; resize: vertical;"
                         placeholder="Enter description..."></textarea>
                 </td>
                 <td>
-                    <input type="number" name="quantity${rowNumber}" placeholder="Enter Quantity" 
-                        style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                    <input type="number" name="quantity${rowNumber}" placeholder="Enter Qty" 
+                        style="width: 100px; height: 30px; margin-left: 5px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                 </td>
                 <td>
                     <input type="number" name="price${rowNumber}" placeholder="Enter Price" 
-                        style="width: 150px; height: 30px; margin-left: 5px; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                        style="width: 103px; text-align: right;height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                 </td>
             `;
             tableBody.appendChild(newRow);
