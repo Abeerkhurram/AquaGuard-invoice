@@ -8,6 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         body {
             font-family: sans-serif;
@@ -49,7 +51,7 @@
         .invoice-header {
             display: flex;
             justify-content: right;
-            margin-bottom: 20px;
+            margin-bottom: 7px;
             align-items: center;
         }
 
@@ -82,11 +84,7 @@
             border-left: 1px solid #3f7f76;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+    
 
         th,
         td {
@@ -98,29 +96,43 @@
         th {
             background-color: #cce0df;
         }
+.tcontainer {
+    position: relative; /* Maintain relative positioning */
+    width: 100%; /* Full width */
+    margin-bottom: 10px; /* Bottom margin */
+    box-sizing: border-box; /* Include padding and border in height calculations */
+}
 
-        .tcontainer {
-            height: 500px;
-            position: relative;
-            border: none;
-            margin-bottom: 20px;
-        }
+.tcontainer table {
+    width: 100%; /* Table width to fill the container */
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
+}
 
-        .tcontainer table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.tcontainer th, .tcontainer td {
+    padding: 5px; /* Reduced padding for better fit */
+    border: 1px solid #ccc; /* Optional: Add borders to table cells */
+    text-align: left; /* Align text to the left */
+}
 
-        .tcontainer th,
-        .tcontainer td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
+/* Adjust column widths */
+.tcontainer th:nth-child(1), .tcontainer td:nth-child(1) {
+    width: 10%; /* 10% for SR.NO */
+}
 
-        .tcontainer th {
-            background-color: #cce0df;
-        }
+.tcontainer th:nth-child(2), .tcontainer td:nth-child(2) {
+    width: 50%; /* 50% for DESCRIPTION */
+}
+
+.tcontainer th:nth-child(3), .tcontainer td:nth-child(3) {
+    width: 20%; /* 20% for QUANTITY */
+}
+
+.tcontainer th:nth-child(4), .tcontainer td:nth-child(4) {
+    width: 20%; /* 20% for PRICE (PKR) */
+}
+
+
+       
 
         .tcontainer td:nth-child(1),
         .tcontainer td:nth-child(2),
@@ -137,7 +149,7 @@
         .total-section {
             width: 300px;
             float: right;
-             margin-top: -17px; 
+             margin-top: -5px; 
             padding: 0px;
             border: 2px solid #ddd;
             box-sizing: border-box;
@@ -154,7 +166,7 @@
 
         .total-section .label {
             /* background-color: #cce0df; */
-            padding-right: 20px;
+            padding-right: 10px;
             text-decoration: bold;
             margin-left: 20px;
             margin-top: 3px;
@@ -330,6 +342,24 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield; /* For Firefox */
 }
+
+#date {
+    border-radius: 5px;
+    width: 102px;
+    text-align: center;
+    border: none; /* Remove this line */
+    
+   
+    border-top: 2px solid black; 
+    /* Add an underline */
+    border-bottom: 2px solid black; /* Adjust the color and width as needed */
+    
+    /* Optional: Add some padding for better spacing */
+    padding: 5px; /* Adjust the value as needed */
+}
+
+
+
     </style>
 </head>
 
@@ -342,10 +372,18 @@ input[type="number"] {
                         <h3 id="invoice-header">
                             Invoice
                         </h3>
-                <div class="date">
-                    <label for="date">Date:</label>
-                    <input type="date" id="date" name="date">
+            <div class="date" style="text-align: center;">
+                <label for="date">Date:</label>
+                <input type="text" id="date" name="date" class="date-input" placeholder="dd/mm/yyyy" pattern="^\d{1,2}/\d{1,2}/\d{4}$" 
+           oninput="this.value = this.value.replace(/[^0-9/]/g, '')">
+                   
+
+                <br>
+                <span class="ref-no" style="margin-top: 10px; display: block;">ref.no ____________</span>
             </div>
+
+
+            
         </div>
         
         <div class="invoice-details">
@@ -370,7 +408,7 @@ input[type="number"] {
             <table>
                 <thead>
                     <tr>
-                        <th>SR. NO.</th>
+                        <th style="text-align: center;">SR.NO</th>
                         <th style="text-align: center;">DESCRIPTION</th>
 
                         <th>QUANTITY</th>
@@ -379,8 +417,8 @@ input[type="number"] {
                 </thead>
                 <tbody id="table-body">
                     <tr id="row1">
-                        <td>1</td>
-                        <td colspan="1">
+                        <td style="text-align: center;">1</td>
+                        <td  colspan="1">
                             <textarea name="description1" rows="2" style="width: 60ch; word-wrap: break-word; resize:vertical; padding: 3px;"
                                 placeholder="Enter description..."></textarea>
                         </td>
@@ -390,7 +428,7 @@ input[type="number"] {
                             style="text-align: center; width: 60px; height: 30px; ;margin-left: 12px;padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
                     <td>
-                        <input type="number" id="idd" name="price1" placeholder="Price"
+                        <input type="text" id="idd" name="price1" placeholder="Price"
                             style="width: 100px; text-align: right;height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
                     </td>
 
@@ -450,7 +488,7 @@ input[type="number"] {
        
     </div>
 <br><br>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
         // Store for rows' quantity and price
         const rowsData = {
@@ -458,177 +496,169 @@ input[type="number"] {
             row2: { quantity: 0, price: 0 },
             row3: { quantity: 0, price: 0 },
             row4: { quantity: 0, price: 0 },
-            row5: { quantity: 0, price: 0 }
+            row5: { quantity: 0, price: 0 },
+            row6: { quantity: 0, price: 0 },
+            row7: { quantity: 0, price: 0 }
         };
 
-        const totalAmountInput = document.getElementById('total-amount');
-        const advanceInput = document.getElementById('advance');
-        const balanceInput = document.getElementById('balance');
+         const totalAmountInput = document.getElementById('total-amount');
+            const advanceInput = document.getElementById('advance');
+            const balanceInput = document.getElementById('balance');
 
+            // Function to parse formatted price back to a number
+            const parseFormattedPrice = (formattedPrice) => {
+                return parseFloat(formattedPrice.replace(/,/g, ''));
+            };
 
-      
-            
-        
-        // Calculate total amount by fetching from storage
-        function calculateTotalAmount() {
-
-            let totalAmount = 0;
-            for (const row in rowsData) {
-                const { quantity, price } = rowsData[row];
-                totalAmount += quantity * price;
-                    
-            }
-            
-            totalAmount=totalAmount.toLocaleString('en-US');
-            totalAmountInput.value = totalAmount ;
-            
-            calculateBalance();
-        }
-
-        // Calculate balance
-      function calculateBalance() {
-            // Get the advance value, remove 'Rs', commas, and whitespace, then convert to a number
-            const advance = parseFloat(advanceInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
-
-            // Remove 'Rs', commas from totalAmount and convert to a number
-            const totalAmount = parseFloat(totalAmountInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
-
-            // Calculate the balance
-            const temp = totalAmount - advance;
-
-            // Set the formatted advance value back to advanceInput
-            
-            // Check if temp is equal to the total amount (indicating advance is zero)
-            if (temp == totalAmount) {
-                advanceInput.placeholder = "0"; // Show placeholder if advance is zero
-            } else {
-                // Clear the placeholder if advance is not zero
-                advanceInput.value = advance.toLocaleString('en-US') ;
+            // Calculate total amount by fetching from storage
+            function calculateTotalAmount() {
+                let totalAmount = 0;
+                for (const row in rowsData) {
+                    const { quantity, price } = rowsData[row];
+                    totalAmount += quantity * price;
+                }
+                totalAmount = totalAmount.toLocaleString('en-US');
+                totalAmountInput.value = totalAmount;
+                calculateBalance();
             }
 
-            // Set the balance value in en-US format with ' Rs' suffix
-            balanceInput.value = temp.toLocaleString('en-US') ;
+            // Calculate balance
+            function calculateBalance() {
+                const advance = parseFloat(advanceInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
+                const totalAmount = parseFloat(totalAmountInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
+                const temp = totalAmount - advance;
 
-            console.log(balanceInput.value);
-        }
-
- function expandTextarea(element) {
-        element.style.height = "auto"; // Reset height to auto to recalculate
-        element.style.height = element.scrollHeight + "px"; // Expand to fit content
-
-        // Add line breaks every 50 characters
-        let text = element.value.replace(/\n/g, ""); // Remove existing line breaks
-        let formattedText = text.match(/.{1,50}/g)?.join("\n") || text; // Insert line break every 50 chars
-        if (formattedText !== text) {
-            element.value = formattedText;
-        }
-    }
-
-
-
-
-        // Update storage for quantity and price of a specific row
-        function updateRowData(rowNumber, fieldType, value) {
-            
-
-            
-            const rowKey = `row${rowNumber}`;
-            rowsData[rowKey][fieldType] = parseFloat(value) || 0;
-            
-            calculateTotalAmount();
-        }
-
-        // Add event listeners dynamically for quantity and price input changes
-        function attachEventListeners(rowNumber) {
-            const quantityInput = document.querySelector(`input[name="quantity${rowNumber}"]`);
-            const priceInput = document.querySelector(`input[name="price${rowNumber}"]`);
-            
-
-        quantityInput.addEventListener('input', () => {
-                // Convert to positive if the value is negative
-                if (quantityInput.value < 0) {
-                    quantityInput.value = Math.abs(quantityInput.value);
+                if (temp == totalAmount) {
+                    advanceInput.placeholder = "0"; // Show placeholder if advance is zero
+                } else {
+                    advanceInput.value = advance.toLocaleString('en-US');
                 }
-                updateRowData(rowNumber, 'quantity', quantityInput.value);
-            });
 
-          priceInput.addEventListener('input', () => {
-                // Convert to positive if the value is negative
-                let temp;
-                if (priceInput.value < 0) {
-                    priceInput.value = Math.abs(priceInput.value);
+                balanceInput.value = temp.toLocaleString('en-US');
+                console.log(balanceInput.value);
+            }
+
+            function expandTextarea(element) {
+                element.style.height = "auto"; // Reset height to auto to recalculate
+                element.style.height = element.scrollHeight + "px"; // Expand to fit content
+
+                // Add line breaks every 50 characters
+                let text = element.value.replace(/\n/g, ""); // Remove existing line breaks
+                let formattedText = text.match(/.{1,50}/g)?.join("\n") || text; // Insert line break every 50 chars
+                if (formattedText !== text) {
+                    element.value = formattedText;
                 }
-                    
-                updateRowData(rowNumber, 'price', priceInput.value);
-            });
+            }
 
+            // Update storage for quantity and price of a specific row
+            function updateRowData(rowNumber, fieldType, value) {
+                const rowKey = `row${rowNumber}`;
+                rowsData[rowKey][fieldType] = parseFloat(value) || 0; // Store numeric value
+                calculateTotalAmount();
+            }
 
-        }
+            // Add event listeners dynamically for quantity and price input changes
+            function attachEventListeners(rowNumber) {
+                const quantityInput = document.querySelector(`input[name="quantity${rowNumber}"]`);
+                const priceInput = document.querySelector(`input[name="price${rowNumber}"]`);
 
-        // Initial rows and event listeners
-        let rowNumber = 2;
+                quantityInput.addEventListener('input', () => {
+                    // Convert to positive if the value is negative
+                    if (quantityInput.value < 0) {
+                        quantityInput.value = Math.abs(quantityInput.value);
+                    }
+                    updateRowData(rowNumber, 'quantity', quantityInput.value);
+                });
 
-        function addRow() {
-            if(rowNumber==8)
-        {
-            return;
-        }
-            let tableBody = document.getElementById('table-body');
-            let newRow = document.createElement('tr');
-            newRow.id = `row${rowNumber}`;
-            newRow.innerHTML = `
-                <td>${rowNumber}</td>
-                <td colspan="1">
-                    <textarea name="description${rowNumber}" rows="2" style="width: 60ch; word-wrap: break-word; resize: vertical;"
-                        placeholder="Enter description..."></textarea>
-                </td>
-                <td>
-                    <input type="number" name="quantity${rowNumber}" placeholder="Qty" 
-                        style="text-align: center; width: 60px; height: 30px; ;margin-left: 12px;padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
-                </td>
-                <td>
-                    <input type="number"  name="price${rowNumber}" placeholder="Price" 
-                        style="width: 100px; text-align: right;height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
-                </td>
-            `;
-            tableBody.appendChild(newRow);
+                priceInput.addEventListener('input', () => {
+                    // Convert to positive if the value is negative
+                    if (priceInput.value < 0) {
+                        priceInput.value = Math.abs(priceInput.value);
+                    }
 
-            attachEventListeners(rowNumber);
-            rowNumber++;
-        }
+                    // Remove commas to parse the number correctly
+                    const numericPrice = parseFormattedPrice(priceInput.value);
 
-        function removeRow() {
-            let tableBody = document.getElementById('table-body');
-            if (rowNumber > 2) {
-                let rowToDelete = document.getElementById(`row${rowNumber - 1}`);
+                    // Update the rowsData
+                    rowsData[`row${rowNumber}`].price = numericPrice;
+
+                    // Format the price with commas for display
+                    priceInput.value = numericPrice.toLocaleString('en-US');
+
+                    // Update the row data
+                    updateRowData(rowNumber, 'price', numericPrice);
+                });
+            }
+
+            // Initial rows and event listeners
+            let rowNumber = 2;
+
+            function addRow() {
+                if (rowNumber == 8) {
+                    return;
+                }
+                let tableBody = document.getElementById('table-body');
+                let newRow = document.createElement('tr');
+                newRow.id = `row${rowNumber}`;
+                newRow.innerHTML = `
+            <td style="text-align: center;">${rowNumber}</td>
+            <td colspan="1">
+                <textarea name="description${rowNumber}" rows="2" style="width: 60ch; word-wrap: break-word; resize: vertical;"
+                    placeholder="Enter description..."></textarea>
+            </td>
+            <td>
+                <input type="number" name="quantity${rowNumber}" placeholder="Qty" 
+                    style="text-align: center; width: 60px; height: 30px; margin-left: 12px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+            </td>
+            <td>
+                <input type="text" name="price${rowNumber}" placeholder="Price" 
+                    style="width: 100px; text-align: right; height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+            </td>
+        `;
+                tableBody.appendChild(newRow);
+                attachEventListeners(rowNumber);
+                rowNumber++;
+            }
+
+            function removeRow() {
+                let tableBody = document.getElementById('table-body');
+                if (rowNumber > 2) {
+                    let rowToDelete = document.getElementById(`row${rowNumber - 1}`);
+                    rowToDelete.parentNode.removeChild(rowToDelete);
+                    rowNumber--;
+                    delete rowsData[`row${rowNumber}`];
+                    calculateTotalAmount(); // Recalculate after row removal
+                }
+            }
+
+            function deleteRow(rowNumber) {
+                let rowToDelete = document.getElementById(`row${rowNumber}`);
                 rowToDelete.parentNode.removeChild(rowToDelete);
-                rowNumber--;
-                // Remove row from rowsData storage
                 delete rowsData[`row${rowNumber}`];
-                calculateTotalAmount(); // Recalculate after row removal
+                calculateTotalAmount(); // Recalculate after row deletion
             }
-        }
 
-        function deleteRow(rowNumber) {
-            let rowToDelete = document.getElementById(`row${rowNumber}`);
-            rowToDelete.parentNode.removeChild(rowToDelete);
-            delete rowsData[`row${rowNumber}`];
-            calculateTotalAmount(); // Recalculate after row deletion
-        }
+            // Attach event listeners to initial rows
+            for (let i = 1; i <= 5; i++) {
+                attachEventListeners(i);
+            }
 
-        // Attach event listeners to initial rows
-        for (let i = 1; i <= 5; i++) {
-            attachEventListeners(i);
-        }
+            function downloadAndPrintInvoice() {
+                window.print();
+            }
 
-      function downloadAndPrintInvoice() {
-           
-           window.print();
-        }
-            
+            const dateInput = document.getElementById('date');
+            const formattedDate = document.getElementById('formatted-date');
 
-        calculateTotalAmount();
-        calculateBalance();
+            dateInput.addEventListener('change', function () {
+                const dateValue = new Date(this.value);
+                const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                const formatted = dateValue.toLocaleDateString('en-GB', options).replace(/\//g, ' ');
+                formattedDate.textContent = formatted; // Display the formatted date
+            });
+
+            calculateTotalAmount();
+            calculateBalance();
     </script>
 
 </body>
