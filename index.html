@@ -355,9 +355,24 @@ input[type="number"] {
     border-bottom: 2px solid black; /* Adjust the color and width as needed */
     
     /* Optional: Add some padding for better spacing */
-    padding: 5px; /* Adjust the value as needed */
+    padding: 2px; /* Adjust the value as needed */
 }
 
+.ref-input {
+    border: none; /* No border by default *//* Right border */
+    border-bottom: 1px solid black; /* Underline */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center; /* Center text */
+    width: 100px; /* Adjust width as needed */
+    padding: 5px; /* Adjust padding for better spacing */
+    margin-left: 1px; /* Space between text and input */
+}
+
+/* Optional: Add focus styles */
+.ref-input:focus {
+    outline: none; /* Remove default outline */
+    border-bottom: 2px solid black; /* Change underline color on focus */
+}
 
 
     </style>
@@ -379,7 +394,10 @@ input[type="number"] {
                    
 
                 <br>
-                <span class="ref-no" style="margin-top: 10px; display: block;">ref.no ____________</span>
+            <span class="ref-no" style="margin-top: 10px; display: block;">
+                ref.no <input type="text" class="ref-input"  />
+            </span>
+
             </div>
 
 
