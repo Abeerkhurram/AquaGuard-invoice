@@ -508,6 +508,21 @@ input[type="number"] {
 <br><br>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    window.onload = function() {
+        const username = prompt("Enter Username:");
+        const password = prompt("Enter Password:");
+
+        if (username !== "Zakir" || password !== "Aquaguard") {
+            alert("Incorrect Username or Password. Please try again.");
+            location.reload();
+        } else {
+            alert("Access Granted!");
+            // Initialize the page functionality here
+            initializePage();
+        }
+    };
+
+    function initializePage() {
         // Store for rows' quantity and price
         const rowsData = {
             row1: { quantity: 0, price: 0 },
@@ -519,165 +534,167 @@ input[type="number"] {
             row7: { quantity: 0, price: 0 }
         };
 
-         const totalAmountInput = document.getElementById('total-amount');
-            const advanceInput = document.getElementById('advance');
-            const balanceInput = document.getElementById('balance');
+        const totalAmountInput = document.getElementById('total-amount');
+        const advanceInput = document.getElementById('advance');
+        const balanceInput = document.getElementById('balance');
 
-            // Function to parse formatted price back to a number
-            const parseFormattedPrice = (formattedPrice) => {
-                return parseFloat(formattedPrice.replace(/,/g, ''));
-            };
+        // Function to parse formatted price back to a number
+        const parseFormattedPrice = (formattedPrice) => {
+            return parseFloat(formattedPrice.replace(/,/g, ''));
+        };
 
-            // Calculate total amount by fetching from storage
-            function calculateTotalAmount() {
-                let totalAmount = 0;
-                for (const row in rowsData) {
-                    const { quantity, price } = rowsData[row];
-                    totalAmount += quantity * price;
+        // Calculate total amount by fetching from storage
+        function calculateTotalAmount() {
+            let totalAmount = 0;
+            for (const row in rowsData) {
+                const { quantity, price } = rowsData[row];
+                totalAmount += quantity * price;
+            }
+            totalAmount = totalAmount.toLocaleString('en-US');
+            totalAmountInput.value = totalAmount;
+            calculateBalance();
+        }
+
+        // Calculate balance
+        function calculateBalance() {
+            const advance = parseFloat(advanceInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
+            const totalAmount = parseFloat(totalAmountInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
+            const temp = totalAmount - advance;
+
+            if (temp == totalAmount) {
+                advanceInput.placeholder = "0"; // Show placeholder if advance is zero
+            } else {
+                advanceInput.value = advance.toLocaleString('en-US');
+            }
+
+            balanceInput.value = temp.toLocaleString('en-US');
+            console.log(balanceInput.value);
+        }
+
+        function expandTextarea(element) {
+            element.style.height = "auto"; // Reset height to auto to recalculate
+            element.style.height = element.scrollHeight + "px"; // Expand to fit content
+
+            // Add line breaks every 50 characters
+            let text = element.value.replace(/\n/g, ""); // Remove existing line breaks
+            let formattedText = text.match(/.{1,50}/g)?.join("\n") || text; // Insert line break every 50 chars
+            if (formattedText !== text) {
+                element.value = formattedText;
+            }
+        }
+
+        // Update storage for quantity and price of a specific row
+        function updateRowData(rowNumber, fieldType, value) {
+            const rowKey = `row${rowNumber}`;
+            rowsData[rowKey][fieldType] = parseFloat(value) || 0; // Store numeric value
+            calculateTotalAmount();
+        }
+
+        // Add event listeners dynamically for quantity and price input changes
+        function attachEventListeners(rowNumber) {
+            const quantityInput = document.querySelector(`input[name="quantity${rowNumber}"]`);
+            const priceInput = document.querySelector(`input[name="price${rowNumber}"]`);
+
+            quantityInput.addEventListener('input', () => {
+                // Convert to positive if the value is negative
+                if (quantityInput.value < 0) {
+                    quantityInput.value = Math.abs(quantityInput.value);
                 }
-                totalAmount = totalAmount.toLocaleString('en-US');
-                totalAmountInput.value = totalAmount;
-                calculateBalance();
-            }
-
-            // Calculate balance
-            function calculateBalance() {
-                const advance = parseFloat(advanceInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
-                const totalAmount = parseFloat(totalAmountInput.value.replace(/Rs/g, '').replace(/,/g, '').trim()) || 0;
-                const temp = totalAmount - advance;
-
-                if (temp == totalAmount) {
-                    advanceInput.placeholder = "0"; // Show placeholder if advance is zero
-                } else {
-                    advanceInput.value = advance.toLocaleString('en-US');
-                }
-
-                balanceInput.value = temp.toLocaleString('en-US');
-                console.log(balanceInput.value);
-            }
-
-            function expandTextarea(element) {
-                element.style.height = "auto"; // Reset height to auto to recalculate
-                element.style.height = element.scrollHeight + "px"; // Expand to fit content
-
-                // Add line breaks every 50 characters
-                let text = element.value.replace(/\n/g, ""); // Remove existing line breaks
-                let formattedText = text.match(/.{1,50}/g)?.join("\n") || text; // Insert line break every 50 chars
-                if (formattedText !== text) {
-                    element.value = formattedText;
-                }
-            }
-
-            // Update storage for quantity and price of a specific row
-            function updateRowData(rowNumber, fieldType, value) {
-                const rowKey = `row${rowNumber}`;
-                rowsData[rowKey][fieldType] = parseFloat(value) || 0; // Store numeric value
-                calculateTotalAmount();
-            }
-
-            // Add event listeners dynamically for quantity and price input changes
-            function attachEventListeners(rowNumber) {
-                const quantityInput = document.querySelector(`input[name="quantity${rowNumber}"]`);
-                const priceInput = document.querySelector(`input[name="price${rowNumber}"]`);
-
-                quantityInput.addEventListener('input', () => {
-                    // Convert to positive if the value is negative
-                    if (quantityInput.value < 0) {
-                        quantityInput.value = Math.abs(quantityInput.value);
-                    }
-                    updateRowData(rowNumber, 'quantity', quantityInput.value);
-                });
-
-                priceInput.addEventListener('input', () => {
-                    // Convert to positive if the value is negative
-                    if (priceInput.value < 0) {
-                        priceInput.value = Math.abs(priceInput.value);
-                    }
-
-                    // Remove commas to parse the number correctly
-                    const numericPrice = parseFormattedPrice(priceInput.value);
-
-                    // Update the rowsData
-                    rowsData[`row${rowNumber}`].price = numericPrice;
-
-                    // Format the price with commas for display
-                    priceInput.value = numericPrice.toLocaleString('en-US');
-
-                    // Update the row data
-                    updateRowData(rowNumber, 'price', numericPrice);
-                });
-            }
-
-            // Initial rows and event listeners
-            let rowNumber = 2;
-
-            function addRow() {
-                if (rowNumber == 8) {
-                    return;
-                }
-                let tableBody = document.getElementById('table-body');
-                let newRow = document.createElement('tr');
-                newRow.id = `row${rowNumber}`;
-                newRow.innerHTML = `
-            <td style="text-align: center;">${rowNumber}</td>
-            <td colspan="1">
-                <textarea name="description${rowNumber}" rows="2" style="width: 60ch; word-wrap: break-word; resize: vertical;"
-                    placeholder="Enter description..."></textarea>
-            </td>
-            <td>
-                <input type="number" name="quantity${rowNumber}" placeholder="Qty" 
-                    style="text-align: center; width: 60px; height: 30px; margin-left: 12px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
-            </td>
-            <td>
-                <input type="text" name="price${rowNumber}" placeholder="Price" 
-                    style="width: 100px; text-align: right; height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
-            </td>
-        `;
-                tableBody.appendChild(newRow);
-                attachEventListeners(rowNumber);
-                rowNumber++;
-            }
-
-            function removeRow() {
-                let tableBody = document.getElementById('table-body');
-                if (rowNumber > 2) {
-                    let rowToDelete = document.getElementById(`row${rowNumber - 1}`);
-                    rowToDelete.parentNode.removeChild(rowToDelete);
-                    rowNumber--;
-                    delete rowsData[`row${rowNumber}`];
-                    calculateTotalAmount(); // Recalculate after row removal
-                }
-            }
-
-            function deleteRow(rowNumber) {
-                let rowToDelete = document.getElementById(`row${rowNumber}`);
-                rowToDelete.parentNode.removeChild(rowToDelete);
-                delete rowsData[`row${rowNumber}`];
-                calculateTotalAmount(); // Recalculate after row deletion
-            }
-
-            // Attach event listeners to initial rows
-            for (let i = 1; i <= 5; i++) {
-                attachEventListeners(i);
-            }
-
-            function downloadAndPrintInvoice() {
-                window.print();
-            }
-
-            const dateInput = document.getElementById('date');
-            const formattedDate = document.getElementById('formatted-date');
-
-            dateInput.addEventListener('change', function () {
-                const dateValue = new Date(this.value);
-                const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-                const formatted = dateValue.toLocaleDateString('en-GB', options).replace(/\//g, ' ');
-                formattedDate.textContent = formatted; // Display the formatted date
+                updateRowData(rowNumber, 'quantity', quantityInput.value);
             });
 
-            calculateTotalAmount();
-            calculateBalance();
-    </script>
+            priceInput.addEventListener('input', () => {
+                // Convert to positive if the value is negative
+                if (priceInput.value < 0) {
+                    priceInput.value = Math.abs(priceInput.value);
+                }
+
+                // Remove commas to parse the number correctly
+                const numericPrice = parseFormattedPrice(priceInput.value);
+
+                // Update the rowsData
+                rowsData[`row${rowNumber}`].price = numericPrice;
+
+                // Format the price with commas for display
+                priceInput.value = numericPrice.toLocaleString('en-US');
+
+                // Update the row data
+                updateRowData(rowNumber, 'price', numericPrice);
+            });
+        }
+
+        // Initial rows and event listeners
+        let rowNumber = 2;
+
+        function addRow() {
+            if (rowNumber == 8) {
+                return;
+            }
+            let tableBody = document.getElementById('table-body');
+            let newRow = document.createElement('tr');
+            newRow.id = `row${rowNumber}`;
+            newRow.innerHTML = `
+                <td style="text-align: center;">${rowNumber}</td>
+                <td colspan="1">
+                    <textarea name="description${rowNumber}" rows="2" style="width: 60ch; word-wrap: break-word; resize: vertical;"
+                        placeholder="Enter description..."></textarea>
+                </td>
+                <td>
+                    <input type="number" name="quantity${rowNumber}" placeholder="Qty" 
+                        style="text-align: center; width: 60px; height: 30px; margin-left: 12px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                </td>
+                <td>
+                    <input type="text" name="price${rowNumber}" placeholder="Price" 
+                        style="width: 100px; text-align: right; height: 30px; margin-left: 3px; padding: 5px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;" />
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+            attachEventListeners(rowNumber);
+            rowNumber++;
+        }
+
+        function removeRow() {
+            let tableBody = document.getElementById('table-body');
+            if (rowNumber > 2) {
+                let rowToDelete = document.getElementById(`row${rowNumber - 1}`);
+                rowToDelete.parentNode.removeChild(rowToDelete);
+                rowNumber--;
+                delete rowsData[`row${rowNumber}`];
+                calculateTotalAmount(); // Recalculate after row removal
+            }
+        }
+
+        function deleteRow(rowNumber) {
+            let rowToDelete = document.getElementById(`row${rowNumber}`);
+            rowToDelete.parentNode.removeChild(rowToDelete);
+            delete rowsData[`row${rowNumber}`];
+            calculateTotalAmount(); // Recalculate after row deletion
+        }
+
+        // Attach event listeners to initial rows
+        for (let i = 1; i <= 5; i++) {
+            attachEventListeners(i);
+        }
+
+        function downloadAndPrintInvoice() {
+            window.print();
+        }
+
+        const dateInput = document.getElementById('date');
+        const formattedDate = document.getElementById('formatted-date');
+
+        dateInput.addEventListener('change', function () {
+            const dateValue = new Date(this.value);
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const formatted = dateValue.toLocaleDateString('en-GB', options).replace(/\//g, ' ');
+            formattedDate.textContent = formatted; // Display the formatted date
+        });
+
+        calculateTotalAmount();
+        calculateBalance();
+    }
+</script>
+
 
 </body>
 
