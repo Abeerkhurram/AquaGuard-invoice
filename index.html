@@ -508,21 +508,8 @@ input[type="number"] {
 <br><br>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    window.onload = function() {
-        const username = prompt("Enter Username:");
-        const password = prompt("Enter Password:");
 
-        if (username !== "Zakir" || password !== "huzefa19") {
-            alert("Incorrect Username or Password. Please try again.");
-            location.reload();
-        } else {
-            alert("Access Granted!");
-            // Initialize the page functionality here
-            initializePage();
-        }
-    };
-
-    function initializePage() {
+    
         // Store for rows' quantity and price
         const rowsData = {
             row1: { quantity: 0, price: 0 },
@@ -692,7 +679,7 @@ input[type="number"] {
 
         calculateTotalAmount();
         calculateBalance();
-    }
+    
 </script>
 
 
